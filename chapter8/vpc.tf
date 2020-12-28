@@ -58,3 +58,31 @@ resource "aws_nat_gateway" "nat_gateway" {
         Name = "terraform-NATGW"
     }
 }
+
+#### routing table ####
+resource "aws_route_table" "public" {
+    vpc_id = aws_vpc.main.id
+
+    tags = {
+        Name = "terraform-101-rf-public"
+    }
+}
+# aws_route_table_association 는 
+# 어느 subnet 을 어느 라우트테이블에 연결하는 것을 정의
+resource "aws_route_table_association" "route_table_association_public" {
+    subnet_id = aws_subnet.public_subnet.id
+    route_table_id = aws_route_table.public.id
+}
+
+resource "aws_route_table" "private" {
+    vpc_id = aws_vpc.main.id
+
+    tags = {
+        Name = "terraform-101-rf-private"
+    }
+}
+
+resource "aws_route_table_association" "route_table_association_private" {
+    subnet_id = aws_subnet.private_subnet.id
+    route_table_id = aws_route_table.private.id
+}
