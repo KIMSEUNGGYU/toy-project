@@ -63,6 +63,12 @@ resource "aws_nat_gateway" "nat_gateway" {
 resource "aws_route_table" "public" {
     vpc_id = aws_vpc.main.id
 
+    # 라우팅 룰 적용 - inner rule 방식
+    route {
+        cidr_block = "0.0.0.0/0"
+        gateway_id = aws_internet_gateway.igw.id
+    }
+
     tags = {
         Name = "terraform-101-rf-public"
     }
@@ -85,4 +91,12 @@ resource "aws_route_table" "private" {
 resource "aws_route_table_association" "route_table_association_private" {
     subnet_id = aws_subnet.private_subnet.id
     route_table_id = aws_route_table.private.id
+}
+
+# 라우트 테이블 룰 추가 - 룰까지 추가해야 subnet과 라우팅테이블 통신이 됨!
+# inner rule 방식이 아닌 outter rule(?) 방식
+resource "aws_route" "private_nat" {
+    route_table_id = aws_route_table.private.id
+    destination_cidr_block = "0.0.0.0/0"
+    nat_gateway_id = aws_nat_gateway.nat_gateway.id
 }
