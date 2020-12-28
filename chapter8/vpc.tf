@@ -39,4 +39,22 @@ resource "aws_internet_gateway" "igw" {
     }
 }
 
+#### NAT gateway ####
+# aws_eip ? 는 뭐지? - elastic ip address
+resource "aws_eip" "nat" {
+    vpc = true
 
+    lifecycle {
+        create_before_destroy = true
+    }
+}
+
+resource "aws_nat_gateway" "nat_gateway" {
+    allocation_id = aws_eip.nat.id
+
+    subnet_id = aws_subnet.public_subnet.id     # public subnet 에 nat gateway 생성
+
+    tags = {
+        Name = "terraform-NATGW"
+    }
+}
