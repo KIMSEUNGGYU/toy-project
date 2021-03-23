@@ -1,4 +1,5 @@
 import firebase from "firebase";
+import firebaseApp from "./firebase";
 
 // App 에서 수행하는 로그인, 로그아웃 하는 authentication 클래스
 class AuthService {
@@ -7,7 +8,7 @@ class AuthService {
     const authProvider = new firebase.auth[`${providerName}AuthProvider`]();
 
     // popup 을 이용하기 위해 제공된 코드 사용
-    return firebase //
+    return firebaseApp //
       .auth()
       .signInWithPopup(authProvider);
   }
