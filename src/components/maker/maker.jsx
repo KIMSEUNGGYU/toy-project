@@ -1,56 +1,44 @@
-import React, { useEffect, useState } from 'react';
-import { useHistory } from 'react-router';
-import Editor from '../editor/editor';
-import Footer from '../footer/footer';
-import Header from '../header/header';
-import Preview from '../preview/preview';
-import styles from './maker.module.css';
+import React, { useEffect, useState } from "react";
+import { useHistory } from "react-router";
+import Editor from "../editor/editor";
+import Footer from "../footer/footer";
+import Header from "../header/header";
+import Preview from "../preview/preview";
+import styles from "./maker.module.css";
 
-const Maker = ({ FileInput, authService }) => {
-  const [cards, setCards] = useState({
-    1: {
-      id: '1',
-      name: 'Gyu',
-      company: 'Naver',
-      theme: 'dark',
-      title: 'Software Engineer',
-      email: 'gyu@gmail.com',
-      message: 'go for it',
-      fileName: 'gyu',
-      fileURL: null,
-    },
-    2: {
-      id: '2',
-      name: 'Gyu2',
-      company: 'Naver',
-      theme: 'light',
-      title: 'Software Engineer',
-      email: 'gyu@gmail.com',
-      message: 'go for it',
-      fileName: 'gyu',
-      fileURL: 'ellie',
-    },
-    3: {
-      id: '3',
-      name: 'Gyu3',
-      company: 'Naver',
-      theme: 'colorful',
-      title: 'Software Engineer',
-      email: 'gyu@gmail.com',
-      message: 'go for it',
-      fileName: 'gyu',
-      fileURL: null,
-    },
-  });
+const Maker = ({ FileInput, authService, cardRepository }) => {
   const history = useHistory();
-
+  const historyState = history?.location?.state;
+  const [cards, setCards] = useState({});
+  const [userId, setUserId] = useState(historyState && historyState.id);
   const onLogout = () => {
     authService.logout();
   };
 
   useEffect(() => {
+    // 사용자 아이디가 있을 때만 sync 함
+    if (!userId) {
+      return;
+    }
+
+    const stopSync = cardRepository.syncCards(userId, (cards) => {
+      setCards(cards);
+    });
+
+    // useEffect 에서 return 은 컴포넌트가 언마운트 됐을 때를 의미
+    return () => stopSync();
+  }, [userId]); // userId 가 업데이트 될 때마다
+
+  // login 과 관련된 useEffect
+  useEffect(() => {
     authService.onAuthChange((user) => {
-      !user && history.push('/');
+      if (user) {
+        // 사용자 있다면 userId 를 지정
+        setUserId(user.uid);
+        console.log("a", userId);
+      } else {
+        history.push("/");
+      }
     });
   });
 
@@ -60,6 +48,7 @@ const Maker = ({ FileInput, authService }) => {
       updated[card.id] = card;
       return updated;
     });
+    cardRepository.saveCard(userId, card);
   };
 
   const deleteCard = (card) => {
@@ -68,6 +57,7 @@ const Maker = ({ FileInput, authService }) => {
       delete updated[card.id];
       return updated;
     });
+    cardRepository.removeCard(userId, card);
   };
 
   return (
