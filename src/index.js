@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import ReactDOM from "react-dom";
 import "./index.module.css";
 import App from "./app";
@@ -27,9 +27,9 @@ FileInput 이라는 것이 다른 서비스나 다른 것들을 인젝트 받으
 다른 컴포넌트(하위 컴포넌트)에서 변경하지 않아도 됨
 */
 
-const FileInput = (props) => (
+const FileInput = memo((props) => (
   <ImageFileInput {...props} imageUploader={imageUploader} />
-);
+));
 
 ReactDOM.render(
   <React.StrictMode>

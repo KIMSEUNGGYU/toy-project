@@ -1,8 +1,8 @@
-import React, { useRef, useState } from 'react';
-import Button from '../button/button';
-import styles from './card_add_form.module.css';
+import React, { memo, useRef, useState } from "react";
+import Button from "../button/button";
+import styles from "./card_add_form.module.css";
 
-const CardAddForm = ({ FileInput, onAdd }) => {
+const CardAddForm = memo(({ FileInput, onAdd }) => {
   const formRef = useRef();
   const nameRef = useRef();
   const companyRef = useRef();
@@ -27,14 +27,14 @@ const CardAddForm = ({ FileInput, onAdd }) => {
     event.preventDefault();
     const card = {
       id: Date.now(), // uuid
-      name: nameRef.current.value || '',
-      company: companyRef.current.value || '',
+      name: nameRef.current.value || "",
+      company: companyRef.current.value || "",
       theme: themeRef.current.value,
-      title: titleRef.current.value || '',
-      email: emailRef.current.value || '',
-      message: messageRef.current.value || '',
-      fileName: file.fileName || '',
-      fileURL: file.fileURL || '',
+      title: titleRef.current.value || "",
+      email: emailRef.current.value || "",
+      message: messageRef.current.value || "",
+      fileName: file.fileName || "",
+      fileURL: file.fileURL || "",
     };
 
     formRef.current.reset();
@@ -50,53 +50,53 @@ const CardAddForm = ({ FileInput, onAdd }) => {
       <input
         ref={nameRef}
         className={styles.input}
-        type='text'
-        name='name'
-        placeholder='Name'
+        type="text"
+        name="name"
+        placeholder="Name"
       />
       <input
         ref={companyRef}
         className={styles.input}
-        type='text'
-        name='company'
-        placeholder='Company'
+        type="text"
+        name="company"
+        placeholder="Company"
       />
       <select
         ref={themeRef}
         className={styles.select}
-        name='theme'
-        placeholder='Theme'
+        name="theme"
+        placeholder="Theme"
       >
-        <option placeholder='light'>light</option>
-        <option placeholder='dark'>dark</option>
-        <option placeholder='colorful'>colorful</option>
+        <option placeholder="light">light</option>
+        <option placeholder="dark">dark</option>
+        <option placeholder="colorful">colorful</option>
       </select>
       <input
         ref={titleRef}
         className={styles.input}
-        type='text'
-        name='title'
-        placeholder='Title'
+        type="text"
+        name="title"
+        placeholder="Title"
       />
       <input
         ref={emailRef}
         className={styles.input}
-        type='text'
-        name='email'
-        placeholder='Email'
+        type="text"
+        name="email"
+        placeholder="Email"
       />
       <textarea
         ref={messageRef}
         className={styles.textarea}
-        name='message'
-        placeholder='Message'
+        name="message"
+        placeholder="Message"
       />
       <div className={styles.fileInput}>
         <FileInput name={file.fileName} onFileChange={onFileChange} />
       </div>
-      <Button name='Add' onClick={onSubmit} />
+      <Button name="Add" onClick={onSubmit} />
     </form>
   );
-};
+});
 
 export default CardAddForm;
