@@ -27,7 +27,7 @@ const Maker = ({ FileInput, authService, cardRepository }) => {
 
     // useEffect 에서 return 은 컴포넌트가 언마운트 됐을 때를 의미
     return () => stopSync();
-  }, [userId]); // userId 가 업데이트 될 때마다
+  }, [userId, cardRepository]); // userId 가 업데이트 될 때마다
 
   // login 과 관련된 useEffect
   useEffect(() => {
@@ -35,12 +35,11 @@ const Maker = ({ FileInput, authService, cardRepository }) => {
       if (user) {
         // 사용자 있다면 userId 를 지정
         setUserId(user.uid);
-        console.log("a", userId);
       } else {
         history.push("/");
       }
     });
-  });
+  }, [authService, history]);
 
   const createOrUpdateCard = (card) => {
     setCards((cards) => {

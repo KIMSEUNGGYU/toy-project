@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import styles from "./index.module.css";
+import "./index.module.css";
 import App from "./app";
 import AuthService from "./service/auth_service";
 import ImageUploader from "./service/image_upload";
