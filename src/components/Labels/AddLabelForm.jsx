@@ -18,7 +18,7 @@ const AddLabelForm = ({ visible, hiddenLabelForm }) => {
 
   if (!visible) return null;
 
-  const onSetLabelProperty = (target, key) => {
+  const onSetLabelProperty = (key) => ({ target }) => {
     if (key === "color") {
       setLabel({ ...label, color: getRandomColor() });
       return;
@@ -66,7 +66,7 @@ const AddLabelForm = ({ visible, hiddenLabelForm }) => {
             <Input
               id="name"
               placeholder="Label name"
-              onChange={({ target }) => onSetLabelProperty(target, "name")}
+              onChange={onSetLabelProperty("name")}
             />
           </SubFormBox>
           <SubFormBox>
@@ -75,18 +75,13 @@ const AddLabelForm = ({ visible, hiddenLabelForm }) => {
               id="description"
               style={{ width: "600px" }}
               placeholder="Description (optoinal)"
-              onChange={({ target }) =>
-                onSetLabelProperty(target, "description")
-              }
+              onChange={onSetLabelProperty("description")}
             />
           </SubFormBox>
           <SubFormBox>
             <label htmlFor="color">color</label>
             <div>
-              <RefreshBtn
-                color={color}
-                onClick={() => onSetLabelProperty(null, "color")}
-              >
+              <RefreshBtn color={color} onClick={onSetLabelProperty("color")}>
                 ↻
               </RefreshBtn>
               <Input value={color} readOnly />

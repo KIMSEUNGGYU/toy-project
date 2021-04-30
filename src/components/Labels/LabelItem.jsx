@@ -10,11 +10,11 @@ const LabelItem = ({ labelData }) => {
 
   const [label, setLabel] = useState(labelData);
 
-  const cancelUpdateMode = () => {
+  const closelUpdateMode = () => {
     setIsUpdateMode(false);
   };
 
-  const changeUpdateMode = () => {
+  const openUpdateMode = () => {
     setIsUpdateMode(true);
   };
 
@@ -32,7 +32,7 @@ const LabelItem = ({ labelData }) => {
           {!isUpdateMode && <Description>{label.description}</Description>}
         </LabelInfo>
         <LabelMenu>
-          {!isUpdateMode && <button onClick={changeUpdateMode}>Edit</button>}
+          {!isUpdateMode && <button onClick={openUpdateMode}>Edit</button>}
           <button onClick={onDeleteClick}>Delete</button>
         </LabelMenu>
       </LabelWrapper>
@@ -41,12 +41,16 @@ const LabelItem = ({ labelData }) => {
           visible={isUpdateMode}
           label={label}
           setLabel={setLabel}
-          cancelUpdateMode={cancelUpdateMode}
-          changeUpdateMode={changeUpdateMode}
+          closelUpdateMode={closelUpdateMode}
         />
       )}
 
-      <Dialog label={label} isDialog={isDialog} setIsDialog={setIsDialog} />
+      <Dialog
+        title={"정말 이 레이블을 삭제하시겠습니까?"}
+        label={label}
+        isDialog={isDialog}
+        setIsDialog={setIsDialog}
+      />
     </Item>
   );
 };

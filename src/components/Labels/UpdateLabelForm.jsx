@@ -5,7 +5,7 @@ import labelFetcher from "@service/LabelFetch";
 import { getRandomColor } from "@utils/utils";
 import { LabelsContext, updateLabel } from "@reducer/labelReducer";
 
-const UpdateLabelForm = ({ visible, label, setLabel, cancelUpdateMode }) => {
+const UpdateLabelForm = ({ visible, label, setLabel, closelUpdateMode }) => {
   const [originLabel] = useState(label);
   const { labelsDispatch } = useContext(LabelsContext);
 
@@ -13,8 +13,9 @@ const UpdateLabelForm = ({ visible, label, setLabel, cancelUpdateMode }) => {
 
   const onCancel = () => {
     setLabel(originLabel);
-    cancelUpdateMode();
+    closelUpdateMode();
   };
+
   const onSaveChange = async () => {
     const updatedLabel = {
       id: label.id,
@@ -31,11 +32,11 @@ const UpdateLabelForm = ({ visible, label, setLabel, cancelUpdateMode }) => {
     } catch (error) {
       console.error(`Update Label Error: ${error}`);
     } finally {
-      cancelUpdateMode();
+      closelUpdateMode();
     }
   };
 
-  const onSetLabelProperty = (target, key) => {
+  const onSetLabelProperty = (key) => ({ target }) => {
     if (key === "color") {
       setLabel({ ...label, color: getRandomColor() });
       return;
@@ -52,7 +53,7 @@ const UpdateLabelForm = ({ visible, label, setLabel, cancelUpdateMode }) => {
           <Input
             id="name"
             placeholder="Label name"
-            onChange={({ target }) => onSetLabelProperty(target, "name")}
+            onChange={onSetLabelProperty("name")}
             value={label.name}
           />
         </SubFormBox>
@@ -62,7 +63,7 @@ const UpdateLabelForm = ({ visible, label, setLabel, cancelUpdateMode }) => {
             id="description"
             style={{ width: "600px" }}
             placeholder="Description (optoinal)"
-            onChange={({ target }) => onSetLabelProperty(target, "description")}
+            onChange={onSetLabelProperty("description")}
             value={label.description}
           />
         </SubFormBox>
@@ -71,7 +72,7 @@ const UpdateLabelForm = ({ visible, label, setLabel, cancelUpdateMode }) => {
           <div>
             <RefreshBtn
               color={label.color}
-              onClick={() => onSetLabelProperty(null, "color")}
+              onClick={onSetLabelProperty("color")}
             >
               ↻
             </RefreshBtn>

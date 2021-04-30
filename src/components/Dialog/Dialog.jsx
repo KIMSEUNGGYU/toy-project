@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { LabelsContext, deleteLabel } from "@reducer/labelReducer";
 import labelFetcher from "@service/LabelFetch";
 
-function Dialog({ label, isDialog, setIsDialog }) {
+function Dialog({ title = "Title", label, isDialog, setIsDialog }) {
   const { labelsDispatch } = useContext(LabelsContext);
 
   if (!isDialog) return null;
@@ -27,7 +27,7 @@ function Dialog({ label, isDialog, setIsDialog }) {
   return (
     <DarkBackground>
       <DialogBlock>
-        <h3>“정말 이 레이블을 삭제하시겠습니까?”</h3>
+        <h3>{title}</h3>
         <ButtonGroup>
           <Button onClick={onCancel}>취소</Button>
           <Button onClick={onConfirm}>확인</Button>
