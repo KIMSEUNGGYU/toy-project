@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
@@ -27,11 +27,17 @@ export class UsersService {
     await this.usersRepository.delete(id);
   }
 
-  async createNewUser(user: User): Promise<void> {
+  async create(user: User): Promise<User> {
     await this.usersRepository.save(user);
+    return user;
   }
 
   async getByEmail(email: string) {
-    return this.usersRepository.findOne({ email });
+    const user = await this.usersRepository.findOne({ email });
+    if (user) {
+      return user;
+    }
+
+    throw new HttpException('User with this email deos not exist', HttpStatus.NOT_FOUND);
   }
 }
