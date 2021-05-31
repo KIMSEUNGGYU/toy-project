@@ -30,4 +30,8 @@ export class UsersService {
   async createNewUser(user: User): Promise<void> {
     await this.usersRepository.save(user);
   }
+
+  async getByEmail(email: string) {
+    return this.usersRepository.findOne({ email });
+  }
 }

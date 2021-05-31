@@ -8,9 +8,9 @@ import { UsersService } from '../users/users.service';
 export class AuthService {
   constructor(private usersService: UsersService, private jwtService: JwtService) {}
 
-  async vaildateUser(username: string, pass: string): Promise<any> {
-    const user = await this.usersService.find(username);
-    if (user && user.password === pass) {
+  async vaildateUser(email: string, password: string): Promise<any> {
+    const user = await this.usersService.getByEmail(email);
+    if (user && user.password === password) {
       const { password, ...result } = user;
       return result;
     }
@@ -19,7 +19,7 @@ export class AuthService {
 
   // jwt의 sign() 를 이용하여 access token 반환
   async login(user: User) {
-    const payload = { username: user.username, sub: user.id };
+    const payload = { email: user.email, sub: user.id };
     const token = this.jwtService.sign(payload);
     return token;
   }
