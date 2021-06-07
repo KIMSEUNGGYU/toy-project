@@ -40,4 +40,11 @@ export class UsersService {
 
     throw new HttpException('User with this email deos not exist', HttpStatus.NOT_FOUND);
   }
+
+  async getById(id: number) {
+    const user = await this.usersRepository.findOne({ id });
+    if (user) return user;
+
+    throw new HttpException('User with this id does not exist', HttpStatus.NOT_FOUND);
+  }
 }
