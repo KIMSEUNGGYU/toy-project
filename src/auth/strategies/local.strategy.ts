@@ -6,7 +6,7 @@ import { User } from '../../users/user.entity';
 import { AuthService } from '../auth.service';
 
 @Injectable()
-export class LocalStrategy extends PassportStrategy(Strategy) {
+export class LocalStrategy extends PassportStrategy(Strategy, 'local') {
   constructor(private authService: AuthService) {
     // passport-local 구성 옵션
     super({

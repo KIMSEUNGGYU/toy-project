@@ -48,25 +48,74 @@ export class AuthService {
   }
 
   // jwt의 sign() 를 이용하여 access token 반환
-  async login(user: User) {
-    const payload = { email: user.email, sub: user.id };
-    const token = this.jwtService.sign(payload);
+  // async login(user: User) {
+  //   const payload = { email: user.email, sub: user.id };
+  //   const token = this.jwtService.sign(payload);
+  //   return {
+  //     token,
+  //     domain: 'localhost',
+  //     path: '/',
+  //     httpOnly: true,
+  //     maxAge: Number(this.configService.get('JWT_EXPIRATION_TIME')) * 1000,
+  //   };
+  // }
+
+  // async logOut() {
+  //   return {
+  //     token: '',
+  //     domain: 'localhost',
+  //     path: '/',
+  //     httpOnly: true,
+  //     maxAge: 0,
+  //   };
+  // }
+
+  getCookieWithJwtAccessToken(id: number) {
+    const payload = { id };
+    const token = this.jwtService.sign(payload, {
+      secret: this.configService.get('JWT_ACCESS_TOKEN_SECRET'),
+      expiresIn: `${this.configService.get('JWT_ACCESS_TOKEN_EXPIRATION_TIME')}s`,
+    });
+
     return {
-      token,
+      accessToken: token,
       domain: 'localhost',
       path: '/',
       httpOnly: true,
-      maxAge: Number(this.configService.get('JWT_EXPIRATION_TIME')) * 1000,
+      maxAge: Number(this.configService.get('JWT_ACCESS_TOKEN_EXPIRATION_TIME')) * 1000,
     };
   }
 
-  async logOut() {
+  getCookieWithJwtRefreshToken(id: number) {
+    const payload = { id };
+    const token = this.jwtService.sign(payload, {
+      secret: this.configService.get('JWT_REFRESH_TOKEN_SECRET'),
+      expiresIn: `${this.configService.get('JWT_REFRESH_TOKEN_EXPIRATION_TIME')}s`,
+    });
+
     return {
-      token: '',
+      refreshToken: token,
       domain: 'localhost',
       path: '/',
       httpOnly: true,
-      maxAge: 0,
+      maxAge: Number(this.configService.get('JWT_REFRESH_TOKEN_EXPIRATION_TIME')) * 1000,
+    };
+  }
+
+  getCookiesForLogOut() {
+    return {
+      accessOption: {
+        domain: 'localhost',
+        path: '/',
+        httpOnly: true,
+        maxAge: 0,
+      },
+      refreshOption: {
+        domain: 'localhost',
+        path: '/',
+        httpOnly: true,
+        maxAge: 0,
+      },
     };
   }
 }
