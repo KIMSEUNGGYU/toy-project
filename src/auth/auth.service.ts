@@ -1,3 +1,4 @@
+import { ConfigService } from '@nestjs/config';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { compare, hash } from 'bcrypt';
@@ -7,7 +8,11 @@ import { UsersService } from '../users/users.service';
 
 @Injectable()
 export class AuthService {
-  constructor(private usersService: UsersService, private jwtService: JwtService) {}
+  constructor(
+    private readonly usersService: UsersService,
+    private readonly jwtService: JwtService,
+    private readonly configService: ConfigService,
+  ) {}
 
   async vaildateUser(email: string, plainTextPassword: string): Promise<any> {
     try {
@@ -27,13 +32,6 @@ export class AuthService {
     }
   }
 
-  // jwt의 sign() 를 이용하여 access token 반환
-  async login(user: User) {
-    const payload = { email: user.email, sub: user.id };
-    const token = this.jwtService.sign(payload);
-    return token;
-  }
-
   async register(user: User) {
     const hashedPassword = await hash(user.password, 10);
     try {
@@ -47,5 +45,28 @@ export class AuthService {
         throw new HttpException('User with that email already exists', HttpStatus.BAD_REQUEST);
       }
     }
+  }
+
+  // jwt의 sign() 를 이용하여 access token 반환
+  async login(user: User) {
+    const payload = { email: user.email, sub: user.id };
+    const token = this.jwtService.sign(payload);
+    return {
+      token,
+      domain: 'localhost',
+      path: '/',
+      httpOnly: true,
+      maxAge: Number(this.configService.get('JWT_EXPIRATION_TIME')) * 1000,
+    };
+  }
+
+  async logOut() {
+    return {
+      token: '',
+      domain: 'localhost',
+      path: '/',
+      httpOnly: true,
+      maxAge: 0,
+    };
   }
 }

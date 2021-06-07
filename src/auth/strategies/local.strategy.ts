@@ -18,7 +18,6 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
   // 사용자가 존재하는지 확인 및 유효한지 확인 (username 과 password) 를 통해 검증
   // 유효하지 않으면 예외 던짐
   async validate(username: string, password: string): Promise<User> {
-    console.log('user', username);
     const user = await this.authService.vaildateUser(username, password);
     if (!user) {
       throw new UnauthorizedException();
