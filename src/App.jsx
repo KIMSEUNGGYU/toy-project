@@ -12,7 +12,7 @@ import labelsReducer, {
 } from "@reducer/labelReducer";
 
 function App() {
-  const [menu, setMenu] = useState("labels");
+  const [menu, setMenu] = useState("milestones");
   const [isNewForm, setIsNewForm] = useState(false);
 
   const hiddenLabelForm = () => setIsNewForm(false);

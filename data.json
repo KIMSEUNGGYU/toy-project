@@ -30,5 +30,14 @@
       "description": "this doesn't seem right",
       "color": "#ffff00"
     }
+  ],
+  "milestones": [
+    {
+      "id": 1,
+      "name": "스프린트2",
+      "dueDate": "",
+      "description": "Something isn't working",
+      "color": "#ff0000"
+    }
   ]
 }
