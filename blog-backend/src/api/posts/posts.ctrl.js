@@ -79,7 +79,7 @@ export const write = async (ctx) => {
 };
 
 /**
- * GET /api/posts
+ * GET /api/posts?username=&tag=&page=
  */
 export const list = async (ctx) => {
   // query 는 문자열, 그래서 숫자로 변환해야함.
@@ -91,15 +91,22 @@ export const list = async (ctx) => {
     return;
   }
 
+  const { tag, username } = ctx.query;
+  // tag, username 값이 유효하면 객체 안에 넣고, 그렇지 않으면 넣지 않음.
+  const query = {
+    ...(username ? { 'user.username': username } : {}),
+    ...(tag ? { tags: tag } : {}),
+  };
+
   try {
-    const posts = await Post.find()
+    const posts = await Post.find(query)
       .sort({ _id: -1 })
       .limit(10)
       .skip((page - 1) * 10)
       .exec();
 
     // custom header 설정
-    const postCount = await Post.countDocuments().exec();
+    const postCount = await Post.countDocuments(query).exec();
     ctx.set('Last-page', Math.ceil(postCount / 10));
 
     // body 가 200자 이상인 경우 200자 까지만 전달
