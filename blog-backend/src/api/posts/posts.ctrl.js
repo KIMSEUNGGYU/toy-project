@@ -4,10 +4,35 @@ import Joi from 'joi';
 
 const { ObjectId } = mongoose.Types;
 
-export const checkObjectId = (ctx, next) => {
+// 미들웨어에서 id로 해당 포스트를 찾음. 존재하면 state 로 전달
+export const getPostById = async (ctx, next) => {
   const { id } = ctx.params;
   if (!ObjectId.isValid(id)) {
     ctx.status = 400;
+    return;
+  }
+
+  try {
+    const post = await Post.findById(id);
+    // 포스트 존재하지 않으면
+    if (!post) {
+      ctx.status = 404;
+      return;
+    }
+    ctx.state.post = post;
+    return next();
+  } catch (error) {
+    ctx.throw(500, error);
+  }
+  return next();
+};
+
+// id로 찾은 post 가 로그인 중인 사용자가 작성한 포스트인지 확인해 줌.
+// 아닌 경우 403 에러 발생
+export const checkOwnPost = (ctx, next) => {
+  const { user, post } = ctx.state;
+  if (post.user._id.toString() !== user._id) {
+    ctx.status = 403;
     return;
   }
   return next();
@@ -94,17 +119,7 @@ export const list = async (ctx) => {
  * GET /api/posts/:id
  */
 export const read = async (ctx) => {
-  const { id } = ctx.params;
-  try {
-    const post = await Post.findById(id).exec();
-    if (!post) {
-      ctx.staus = 404;
-      return;
-    }
-    ctx.body = post;
-  } catch (error) {
-    ctx.throw(500, error);
-  }
+  ctx.body = ctx.state.post;
 };
 
 /**
