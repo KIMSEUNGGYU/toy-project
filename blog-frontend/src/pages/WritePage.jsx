@@ -1,7 +1,14 @@
 import React from 'react';
 
-const PostPage = () => {
-  return <div>글쓰기</div>;
+import Editor from '../components/write/Editor';
+import Responsive from '../components/common/Responsive';
+
+const WritePage = () => {
+  return (
+    <Responsive>
+      <Editor />
+    </Responsive>
+  );
 };
 
-export default PostPage;
+export default WritePage;
