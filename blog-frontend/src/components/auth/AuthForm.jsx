@@ -46,7 +46,7 @@ const Footer = styled.div`
   }
 `;
 
-const ButtonWidthMarginTop = styled(Button)`
+const ButtonWithMarginTop = styled(Button)`
   margin-top: 1rem;
 `;
 
@@ -58,6 +58,7 @@ const textMap = {
 const AuthForm = ({ type, form, onChange, onSubmit }) => {
   const text = textMap[type];
 
+  // console.log(form, onSubmit);
   return (
     <AuthFormBlock>
       <h3>{text}</h3>
@@ -87,10 +88,10 @@ const AuthForm = ({ type, form, onChange, onSubmit }) => {
             value={form.passwordConfirm}
           />
         )}
+        <ButtonWithMarginTop cyan fullWidth style={{ marginTop: '1rem' }}>
+          {text}
+        </ButtonWithMarginTop>
       </form>
-      <ButtonWidthMarginTop cyan fullWidth>
-        {type}
-      </ButtonWidthMarginTop>
       <Footer>
         {type === 'login' ? (
           <Link to="/register">회원가입</Link>
