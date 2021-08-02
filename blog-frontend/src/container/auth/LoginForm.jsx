@@ -57,6 +57,12 @@ const LoginForm = ({ history }) => {
   useEffect(() => {
     if (user) {
       history.push('/');
+
+      try {
+        localStorage.setItem('user', JSON.stringify(user));
+      } catch (error) {
+        console.error('localStorage is not wroking');
+      }
     }
   }, [history, user]);
   return (
@@ -71,3 +77,21 @@ const LoginForm = ({ history }) => {
 };
 
 export default withRouter(LoginForm);
+
+/*
+
+try {
+  localStorage.setItem('user', JSON.stringify(user));
+} catch (error) {
+  console.error('localStorage is not wroking');
+}
+
+해당 기능(로그인 상태를 유지하기 위한 기능)을 useEffect 나 componentDidMount 메서드에서 처리해도됨
+하지만 여기서는 index.js 에서 처리
+why?
+componentDidMount, useEffect 는 한 번 렌더링된 이후에 실행되기 때문에
+사용자가 아주 짧은 깜박임 현상(로그인이 나타나거나 로그아웃이 나타나는 현상)을 경험할 수 있으.
+index.js 에서 사용자 정보를 불러오도록 처리하고 컴포넌트를 렌더링하면 이런 깜박임 현상 발생하지 않음.
+
+  
+*/
