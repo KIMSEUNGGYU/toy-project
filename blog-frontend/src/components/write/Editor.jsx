@@ -66,7 +66,6 @@ const Editor = ({ title, body, onChangeField }) => {
   }, [onChangeField]);
 
   const onChangeTitle = ({ target }) => {
-    console.log(target.value);
     onChangeField({ key: 'title', value: target.value });
   };
 

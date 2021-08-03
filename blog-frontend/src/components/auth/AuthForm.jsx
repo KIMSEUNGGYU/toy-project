@@ -68,7 +68,6 @@ const ErrorMessage = styled.div`
 const AuthForm = ({ type, form, onChange, onSubmit, error }) => {
   const text = textMap[type];
 
-  // console.log(form, onSubmit);
   return (
     <AuthFormBlock>
       <h3>{text}</h3>
