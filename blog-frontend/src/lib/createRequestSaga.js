@@ -19,6 +19,7 @@ export default function createReqeustSaga(type, request) {
       yield put({
         type: SUCCESS,
         payload: response.data,
+        meta: response,
       });
     } catch (error) {
       yield put({
