@@ -70,7 +70,5 @@ describe('<App />', () => {
     expect(screen.getByText('ToDo 2')).toBeInTheDocument();
     expect(screen.getByText('ToDo 3')).toBeInTheDocument();
     expect(screen.getAllByText('삭제').length).toBe(3);
-  })
-
-  
+  });
 });
