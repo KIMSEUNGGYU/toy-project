@@ -11,7 +11,7 @@ describe('<App />', () => {
     expect(toDoList).toBeInTheDocument();
     expect(toDoList.firstChild).toBeNull();
 
-    const input = screen.getByPlaceholderText('할 일을 입력해 주세요');
+    const input = screen.getByPlaceholderText('할 일을 입력해주세요');
     expect(input).toBeInTheDocument();
 
     const label = screen.getByText('추가');
@@ -23,7 +23,7 @@ describe('<App />', () => {
   it('adds and deletes ToDo items', () => {
     render(<App />);
 
-    const input = screen.getByPlaceholderText('할 일을 입력해 주세요');
+    const input = screen.getByPlaceholderText('할 일을 입력해주세요');
     const button = screen.getByText('추가');
     fireEvent.change(input, { target: { value: 'study react 1' } });
     fireEvent.click(button);
@@ -61,4 +61,16 @@ describe('<App />', () => {
 
     expect(toDoList.childElementCount).toBe(length);
   });
+
+  it('loads localStorage data', () => {
+    localStorage.setItem('ToDoList', '["ToDo 1", "ToDo 2", "ToDo 3"]');
+    render(<App />);
+
+    expect(screen.getByText('ToDo 1')).toBeInTheDocument();
+    expect(screen.getByText('ToDo 2')).toBeInTheDocument();
+    expect(screen.getByText('ToDo 3')).toBeInTheDocument();
+    expect(screen.getAllByText('삭제').length).toBe(3);
+  })
+
+  
 });
