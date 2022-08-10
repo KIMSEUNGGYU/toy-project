@@ -27,7 +27,7 @@ const config: Configuration = {
     },
   },
   entry: {
-    app: './client',
+    app: './src/client',
   },
   module: {
     rules: [
