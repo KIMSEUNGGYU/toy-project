@@ -1,20 +1,15 @@
-import React, { useCallback, useState, VFC } from 'react';
+import useInput from '@hooks/useInput';
+import React, { useCallback, useState } from 'react';
 
 import { Form, Label, Input, LinkContainer, Button, Header, Error } from './styles';
 
 const SignUp = () => {
-  const [email, setEmail] = useState('dev.seunggyu@gmail.com');
-  const [nickname, setNickname] = useState('');
-  const [password, setPassword] = useState('12341234');
-  const [passwordCheck, setPasswordCheck] = useState('');
+  const [email, onChangeEmail] = useInput('dev.seunggyu@gmail.com');
+  const [nickname, onChangeNickname] = useInput('');
+  const [password, , setPassword] = useInput('12341234');
+  const [passwordCheck, , setPasswordCheck] = useInput('');
   const [mismatchError, setMismatchError] = useState(false);
 
-  const onChangeEmail = useCallback((e) => {
-    setEmail(e.target.value);
-  }, []);
-  const onChangeNickname = useCallback((e) => {
-    setNickname(e.target.value);
-  }, []);
   const onChangePassword = useCallback(
     (e) => {
       setPassword(e.target.value);
