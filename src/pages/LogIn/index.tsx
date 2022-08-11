@@ -1,11 +1,15 @@
 import React, { useCallback, useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import useSWR from 'swr';
 
 import { Form, Label, Input, LinkContainer, Button, Header, Error, Success } from '@pages/SignUp/styles';
 import useInput from '@hooks/useInput';
+import fetcher from '@utils/fetcher';
 
 const LogIn = () => {
+  // [💡 GYU] swr 에서 data가 존재하지 않으면 로딩중
+  const { data, error } = useSWR('/api/users', fetcher);
   const [loginError, setLoginError] = useState(false);
   const [email, onChangeEmail] = useInput('');
   const [password, onChangePassword] = useInput('');
