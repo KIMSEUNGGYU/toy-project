@@ -2,8 +2,19 @@ import React, { FC, useCallback } from 'react';
 import { Redirect } from 'react-router';
 import useSWR from 'swr';
 import axios from 'axios';
+import gravatar from 'gravatar';
 
 import fetcher from '@utils/fetcher';
+import {
+  Channels,
+  Chats,
+  Header,
+  MenuScroll,
+  ProfileImg,
+  WorkspaceName,
+  Workspaces,
+  WorkspaceWrapper,
+} from '@layouts/Workspace/styles';
 
 // [💡 GYU]
 // FC 타입은 children 사용하는 컴포넌트
@@ -29,7 +40,21 @@ const Workspace: FC = ({ children }) => {
 
   return (
     <>
+      <Header>
+        <ProfileImg //
+          src={gravatar.url(data.nick, { s: '28px', d: 'retro' })}
+          alt={data.nickname}
+        />
+      </Header>
       <button onClick={onLogout}>로그아웃</button>
+      <WorkspaceWrapper>
+        <Workspaces>test</Workspaces>
+        <Channels>
+          <WorkspaceName>Sleact</WorkspaceName>
+          <MenuScroll>menu scroll</MenuScroll>
+        </Channels>
+        <Chats>Chatgs</Chats>
+      </WorkspaceWrapper>
       {children}
     </>
   );
