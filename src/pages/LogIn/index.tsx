@@ -9,7 +9,9 @@ import fetcher from '@utils/fetcher';
 
 const LogIn = () => {
   // [💡 GYU] swr 에서 data가 존재하지 않으면 로딩중
-  const { data, error } = useSWR('/api/users', fetcher);
+  // 내가 원할 때 호출하게 하는 것은 revalidate() 로 제어 가능
+  // 주기적으로 호출은 되지만 debupingInterval 기간 내에는 캐시에서 불러옴 (100s)
+  const { data, error, revalidate } = useSWR('/api/users', fetcher, { dedupingInterval: 100000 });
   const [loginError, setLoginError] = useState(false);
   const [email, onChangeEmail] = useInput('');
   const [password, onChangePassword] = useInput('');
@@ -25,7 +27,7 @@ const LogIn = () => {
           password,
         })
         .then((response) => {
-          console.log(response);
+          revalidate();
         })
         .catch((error) => {
           console.error(error.response);
