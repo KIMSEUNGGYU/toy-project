@@ -1,11 +1,15 @@
 import React, { useCallback, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
+import useSWR from 'swr';
 import axios from 'axios';
 
 import { Form, Label, Input, LinkContainer, Button, Header, Error, Success } from './styles';
 import useInput from '@hooks/useInput';
+import fetcher from '@utils/fetcher';
 
 const SignUp = () => {
+  const { data, error, revalidate } = useSWR('/api/users', fetcher, { dedupingInterval: 100000 });
+
   const [email, onChangeEmail] = useInput('dev.seunggyu@gmail.com');
   const [nickname, onChangeNickname] = useInput('');
   const [password, , setPassword] = useInput('12341234');
@@ -58,6 +62,15 @@ const SignUp = () => {
     },
     [email, nickname, password, passwordCheck, mismatchError],
   );
+
+  // [💡 GYU] 깜빡임 방지
+  if (data === undefined) {
+    return <div>로딩중...</div>;
+  }
+
+  if (data) {
+    return <Redirect to="/workspace/channel" />;
+  }
 
   return (
     <div id="container">
