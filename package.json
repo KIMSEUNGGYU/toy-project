@@ -32,6 +32,7 @@
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",
     "react-toastify": "^9.0.8",
+    "regexify-string": "^1.0.19",
     "socket.io-client": "^2.5.0",
     "style-loader": "^2.0.0",
     "swr": "^0.5.7",
