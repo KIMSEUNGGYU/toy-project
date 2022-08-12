@@ -1,11 +1,12 @@
-import { ChatWrapper } from '@components/Chat/styles';
-import { IChat, IDM, IUser } from '@typings/db';
-// import dayjs from 'dayjs';
-import gravatar from 'gravatar';
 import React, { FC, useMemo, memo } from 'react';
 import { useParams } from 'react-router';
 import { Link } from 'react-router-dom';
+import dayjs from 'dayjs';
+import gravatar from 'gravatar';
 // import regexifyString from 'regexify-string';
+
+import { IChat, IDM, IUser } from '@typings/db';
+import { ChatWrapper } from '@components/Chat/styles';
 
 interface Props {
   data: IDM | IChat;
@@ -48,8 +49,7 @@ const Chat: FC<Props> = memo(({ data }) => {
       <div className="chat-text">
         <div className="chat-user">
           <b>{user.nickname}</b>
-          {/* <span>{dayjs(data.createdAt).format('h:mm A')}</span> */}
-          <span>{data.createdAt}</span>
+          <span>{dayjs(data.createdAt).format('h:mm A')}</span>
         </div>
         <p>{data.content}</p>
         {/* <p>{result}</p> */}
