@@ -21,16 +21,11 @@ const CreateChannelModal: VFC<Props> = ({ show, onCloseModal, setShowCloaseModal
 
   const { workspace, channel } = useParams<{ workspace: string; channel: string }>();
 
-  const {
-    data: userData,
-    error,
-    revalidate,
-    mutate,
-  } = useSWR<IUser | false>('http://localhost:3095/api/users', fetcher, {
+  const { data: userData } = useSWR<IUser | false>('http://localhost:3095/api/users', fetcher, {
     dedupingInterval: 100000,
   });
 
-  const { data: channelData, revalidate: revalidateChannel } = useSWR<IChannel[]>(
+  const { revalidate: revalidateChannel } = useSWR<IChannel[]>(
     userData ? `http://localhost:3095/api/workspaces/${workspace}/channels` : null,
     fetcher,
   );

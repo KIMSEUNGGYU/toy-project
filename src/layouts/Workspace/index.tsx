@@ -30,6 +30,8 @@ import Menu from '@components/Menu';
 import Modal from '@components/Modal';
 import useInput from '@hooks/useInput';
 import CreateChannelModal from '@components/CreateChannelModal';
+import InviteWorkpsaceModal from '@components/InviteWorkpsaceModal';
+import InviteChannelModal from '@components/InviteChannelModal';
 const Channel = loadable(() => import('@pages/Channel'));
 const DirectMessage = loadable(() => import('@pages/DirectMessage'));
 
@@ -41,6 +43,8 @@ const Workspace: VFC = () => {
   const [showCreateWorkspaceModal, setShowCreateWorkspaceModal] = useState(false);
   const [showWorkspaceModal, setShowWorkspaceModal] = useState(false);
   const [showCreateChannelModal, setShowCreateChannelModal] = useState(false);
+  const [showInviteWorkspaceModal, setShowInviteWorkspaceModal] = useState(false);
+  const [showInviteChannelModal, setShowInviteChannelModal] = useState(false);
   const [newWorkspace, onChangeNewWorkspace, setNewWorkspae] = useInput('');
   const [newUrl, onChangeNewUrl, setNewUrl] = useInput('');
 
@@ -116,6 +120,8 @@ const Workspace: VFC = () => {
   const onCloseModal = useCallback(() => {
     setShowCreateWorkspaceModal(false);
     setShowCreateChannelModal(false);
+    setShowInviteWorkspaceModal(false);
+    setShowInviteChannelModal(false);
   }, []);
 
   const toggleWorkspaceModal = useCallback(() => {
@@ -125,6 +131,8 @@ const Workspace: VFC = () => {
   const onClickAddChannel = useCallback(() => {
     setShowCreateChannelModal(true);
   }, []);
+
+  const onClickInviteWorkspace = useCallback(() => {}, []);
 
   if (!userData) {
     return <Redirect to="/login" />;
@@ -168,6 +176,7 @@ const Workspace: VFC = () => {
             <Menu show={showWorkspaceModal} onCloseModal={toggleWorkspaceModal} style={{ top: 95, left: 80 }}>
               <WorkspaceModal>
                 <h2>Sleact</h2>
+                <button onClick={onClickInviteWorkspace}>워크스페이스에 사용자 초대</button>
                 <button onClick={onClickAddChannel}>채널 만들기</button>
                 <button onClick={onLogout}>로그아웃</button>
               </WorkspaceModal>
@@ -201,6 +210,17 @@ const Workspace: VFC = () => {
         show={showCreateChannelModal}
         onCloseModal={onCloseModal}
         setShowCloaseModal={setShowCreateChannelModal}
+      />
+      <InviteWorkpsaceModal
+        show={showInviteWorkspaceModal}
+        onCloseModal={onCloseModal}
+        setShowInviteWorkspaceModal={setShowInviteWorkspaceModal}
+      />
+      <InviteChannelModal
+        // showInviteChannelModal
+        show={showInviteChannelModal}
+        onCloseModal={onCloseModal}
+        setShowInviteChannelModal={setShowInviteChannelModal}
       />
     </>
   );
