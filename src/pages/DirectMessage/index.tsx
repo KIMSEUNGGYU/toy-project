@@ -8,19 +8,44 @@ import { useParams } from 'react-router';
 import ChatBox from '@components/ChatBox';
 import ChatList from '@components/ChatList';
 import useInput from '@hooks/useInput';
+import axios from 'axios';
+import { IDM } from '@typings/db';
 
 const DirectMessage = () => {
   const { workspace, id } = useParams<{ workspace: string; id: string }>();
 
   const { data: myData } = useSWR('/api/users', fetcher);
   const { data: userData } = useSWR(`/api/workspaces/${workspace}/users/${id}`, fetcher);
-  const [chat, onChangeChat] = useInput('');
+  const [chat, onChangeChat, setChat] = useInput('');
 
-  const onSubmitForm = useCallback((e) => {
-    e.preventDefault();
+  const {
+    data: chatData,
+    mutate: mutateChat,
+    revalidate,
+  } = useSWR<IDM[]>(`/api/workspaces/${workspace}/dms/${id}/chats?perPage=20&page=1`, fetcher);
 
-    console.log('submit');
-  }, []);
+  const onSubmitForm = useCallback(
+    (e) => {
+      e.preventDefault();
+
+      if (chat.trim()) {
+        axios
+          .post(
+            `/api/workspaces/${workspace}/dms/${id}/chats`, //
+            { content: chat },
+            { withCredentials: true },
+          )
+          .then(() => {
+            revalidate();
+            setChat('');
+          })
+          .catch((error) => {
+            console.dir(error);
+          });
+      }
+    },
+    [chat],
+  );
 
   if (!userData || !myData) return null;
 
