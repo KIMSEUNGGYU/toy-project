@@ -1,41 +1,64 @@
+import autosize from 'autosize';
+
 import { ChatArea, Form, MentionsTextarea, SendButton, Toolbox, EachMention } from '@components/ChatBox/styles';
+
 import { IUser } from '@typings/db';
-// import autosize from 'autosize';
 import gravatar from 'gravatar';
 import React, { useCallback, useEffect, useRef, VFC } from 'react';
 // import { Mention, SuggestionDataItem } from 'react-mentions';
 
 interface Props {
-  //   onSubmitForm: (e: any) => void;
+  onSubmitForm: (e: any) => void;
+  onChangeChat: (e: any) => void;
   chat?: string;
-  //   onChangeChat: (e: any) => void;
-  //   placeholder: string;
+  placeholder?: string;
   //   data?: IUser[];
 }
-// const ChatBox: VFC<Props> = ({ onSubmitForm, chat, onChangeChat, placeholder, data }) => {
-const ChatBox: VFC<Props> = ({ chat }) => {
-  const onSubmitForm = useCallback(() => {}, []);
+const ChatBox: VFC<Props> = ({
+  chat,
+  onChangeChat,
+  onSubmitForm,
+  placeholder,
+  //data
+}) => {
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  useEffect(() => {
+    if (textareaRef.current) {
+      autosize(textareaRef.current);
+    }
+  }, []);
+
+  const onKeydownChat = useCallback((e) => {
+    if (e.key === 'Enter') {
+      if (!e.shiftKey) {
+        e.preventDefault();
+        onSubmitForm(e);
+      }
+    }
+  }, []);
 
   return (
     <ChatArea>
       <Form onSubmit={onSubmitForm}>
-        <textarea />
-        {/* <MentionsTextarea
+        {/* <MentionsTextarea /> */}
+        <MentionsTextarea
           id="editor-chat"
           value={chat}
           onChange={onChangeChat}
           onKeyPress={onKeydownChat}
           placeholder={placeholder}
-          inputRef={textareaRef}
-          allowSuggestionsAboveCursor
-        > */}
-        {/* <Mention
+          //   inputRef={textareaRef}
+          ref={textareaRef}
+          //   allowSuggestionsAboveCursor
+        >
+          {/* <Mention
             appendSpaceOnAdd
             trigger="@"
             data={data?.map((v) => ({ id: v.id, display: v.nickname })) || []}
             renderSuggestion={renderUserSuggestion}
           /> */}
-        {/* </MentionsTextarea> */}
+        </MentionsTextarea>
         <Toolbox>
           <SendButton
             className={
