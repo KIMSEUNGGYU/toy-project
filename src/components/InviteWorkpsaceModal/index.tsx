@@ -21,9 +21,9 @@ const InviteWorkpsaceModal: VFC<Props> = ({ show, onCloseModal, setShowInviteWor
 
   const [newMember, onChangeNewMember, setNewMember] = useInput('');
 
-  const { data: userData } = useSWR<IUser | false>('http://localhost:3095/api/users', fetcher);
+  const { data: userData } = useSWR<IUser | false>('/api/users', fetcher);
   const { revalidate: revalidateMember } = useSWR<IChannel[]>(
-    userData ? `http://localhost:3095/api/workspaces/${workspace}/members` : null,
+    userData ? `/api/workspaces/${workspace}/members` : null,
     fetcher,
   );
 

@@ -32,6 +32,7 @@ import useInput from '@hooks/useInput';
 import CreateChannelModal from '@components/CreateChannelModal';
 import InviteWorkpsaceModal from '@components/InviteWorkpsaceModal';
 import InviteChannelModal from '@components/InviteChannelModal';
+import DMList from '@components/DMList';
 const Channel = loadable(() => import('@pages/Channel'));
 const DirectMessage = loadable(() => import('@pages/DirectMessage'));
 
@@ -54,20 +55,18 @@ const Workspace: VFC = () => {
     error,
     revalidate,
     mutate,
-  } = useSWR<IUser | false>('http://localhost:3095/api/users', fetcher, {
+  } = useSWR<IUser | false>('/api/users', fetcher, {
     // 💡 100초 동안 캐시, 그래서 다른 곳에서 해당 작업이 있더라도 캐시 기간동안은 캐시값을 읽어 서버에 무리를 최소화
     // 실시간 데이터시,  dedupingInterval 의 시간을 줄이면 됨!
     dedupingInterval: 100000,
   });
 
-  const { data: channelData } = useSWR<IChannel[]>(
-    userData ? `http://localhost:3095/api/workspaces/${workspace}/channels` : null,
-    fetcher,
-  );
+  const { data: channelData } = useSWR<IChannel[]>(userData ? `/api/workspaces/${workspace}/channels` : null, fetcher);
+  // const { data: memberData } = useSWR<IUser[]>(userData ? `/api/workspaces/${workspace}/members` : null, fetcher);
 
   const onLogout = useCallback(() => {
     axios //
-      .post('http://localhost:3095/api/users/logout', null, { withCredentials: true })
+      .post('/api/users/logout', null, { withCredentials: true })
       .then(() => {
         mutate(false);
       });
@@ -95,7 +94,7 @@ const Workspace: VFC = () => {
 
       axios
         .post(
-          'http://localhost:3095/api/workspaces',
+          '/api/workspaces',
           {
             workspace: newWorkspace,
             url: newUrl,
@@ -181,9 +180,11 @@ const Workspace: VFC = () => {
                 <button onClick={onLogout}>로그아웃</button>
               </WorkspaceModal>
             </Menu>
-            {channelData?.map((v) => (
+            {/* <ChannelList userData={userData} /> */}
+            <DMList />
+            {/* {channelData?.map((v) => (
               <div>{v.name}</div>
-            ))}
+            ))} */}
           </MenuScroll>
         </Channels>
         <Chats>
