@@ -1,4 +1,4 @@
-import React, { useCallback, useRef } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import useSWR, { useSWRInfinite } from 'swr';
 import gravatar from 'gravatar';
 import { Scrollbars } from 'react-custom-scrollbars';
@@ -41,7 +41,29 @@ const DirectMessage = () => {
     (e) => {
       e.preventDefault();
 
-      if (chat.trim()) {
+      // optimous UI 적용 chatData
+      if (chat.trim() && chatData) {
+        const savedChat = chat;
+
+        // (이전엔 채팅 보내면 약간 딜레이존재해서 보완하기 위해)
+        // [💡 GYU] mutateChat 으로 먼저 UI 변경하고
+        mutateChat((prevChatData) => {
+          prevChatData?.[0].unshift({
+            id: (chatData[0][0]?.id || 0) + 1,
+            content: savedChat,
+            SenderId: myData.id,
+            Sender: myData,
+            ReceiverId: userData.id,
+            Receiver: userData,
+            createdAt: new Date(),
+          });
+          return prevChatData;
+        }, false).then(() => {
+          setChat('');
+          scrollbarRef.current?.scrollToBottom();
+        });
+
+        // 비동기 요청
         axios
           .post(
             `/api/workspaces/${workspace}/dms/${id}/chats`, //
@@ -50,15 +72,25 @@ const DirectMessage = () => {
           )
           .then(() => {
             revalidate();
-            setChat('');
           })
           .catch((error) => {
             console.dir(error);
           });
       }
     },
-    [chat],
+    [chat, chatData, myData, userData, workspace, id],
   );
+
+  // 로딩시 스크롤바 제일 아래로
+  useEffect(() => {
+    if (chatData?.length === 1) {
+      scrollbarRef.current?.scrollToBottom();
+    }
+  }, [chatData]);
+
+  useEffect(() => {
+    localStorage.setItem(`${workspace}-${id}`, new Date().getTime().toString());
+  }, [workspace, id]);
 
   if (!userData || !myData) return null;
 
