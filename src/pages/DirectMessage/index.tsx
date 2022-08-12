@@ -64,7 +64,7 @@ const DirectMessage = () => {
         chatSections={chatSections}
         setSize={setSize}
       /> */}
-      <ChatList />
+      <ChatList chatData={chatData} />
       <ChatBox
         chat={chat}
         onChangeChat={onChangeChat}
