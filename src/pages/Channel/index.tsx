@@ -17,7 +17,6 @@ import { Container, DragOver, Header } from './styles';
 
 const PAGE_SIZE = 20;
 const Channel = () => {
-  // const [chat, onChangeChat,
   const { workspace, channel } = useParams<{ workspace: string; channel: string }>();
   const [socket] = useSocket(workspace);
   const { data: userData } = useSWR<IUser>('/api/users', fetcher);
@@ -90,25 +89,39 @@ const Channel = () => {
     [chat, workspace, channel, channelData, userData, chatData, mutateChat, setChat],
   );
 
-  const onMessage = (data: IChat) => {
-    if (data.Channel.name === channel && data.UserId !== userData?.id) {
-      mutateChat((chatData) => {
-        chatData?.[0].unshift(data);
-        return chatData;
-      }, false).then(() => {
-        if (scrollbarRef.current) {
-          if (
-            scrollbarRef.current.getScrollHeight() <
-            scrollbarRef.current.getClientHeight() + scrollbarRef.current.getScrollTop() + 150
-          ) {
-            console.log('scrollToBottom!', scrollbarRef.current?.getValues());
-            scrollbarRef.current.scrollToBottom();
+  const onMessage = useCallback(
+    (data: IChat) => {
+      if (
+        data.Channel.name === channel &&
+        (data.content.startsWith('uploads\\') || data.content.startsWith('uploads/') || data.UserId !== userData?.id)
+      ) {
+        mutateChat((chatData) => {
+          chatData?.[0].unshift(data);
+          return chatData;
+        }, false).then(() => {
+          if (scrollbarRef.current) {
+            if (
+              scrollbarRef.current.getScrollHeight() <
+              scrollbarRef.current.getClientHeight() + scrollbarRef.current.getScrollTop() + 150
+            ) {
+              console.log('scrollToBottom!', scrollbarRef.current?.getValues());
+              setTimeout(() => {
+                scrollbarRef.current?.scrollToBottom();
+              }, 100);
+            } else {
+              toast.success('새 메시지가 도착했습니다.', {
+                onClick() {
+                  scrollbarRef.current?.scrollToBottom();
+                },
+                closeOnClick: true,
+              });
+            }
           }
-        }
-      });
-    }
-  };
-
+        });
+      }
+    },
+    [channel, userData, mutateChat],
+  );
   useEffect(() => {
     socket?.on('message', onMessage);
     return () => {
@@ -129,6 +142,7 @@ const Channel = () => {
       e.preventDefault();
       console.log(e);
       const formData = new FormData();
+      // 브라우저마다 파일이  e.dataTransfer.items 이거나 files 에 들어있어 분기해서 처리
       if (e.dataTransfer.items) {
         // Use DataTransferItemList interface to access the file(s)
         for (let i = 0; i < e.dataTransfer.items.length; i++) {
