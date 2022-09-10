@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@src/*": ["src/*"],
+      "@components/*": ["src/components/*"],
+      "@header/*": ["src/components/Header/*"],
+      "@menu/*": ["src/components/Menu/*"],
+      "@dialog/*": ["src/components/Dialog/*"],
+      "@labels/*": ["src/components/Labels/*"],
+      "@milestones/*": ["src/components/Milestones/*"],
+      "@service/*": ["src/service/*"],
+      "@utils/*": ["src/utils/*"],
+      "@reducer/*": ["src/reducer"]
+    }
+  }
+}
