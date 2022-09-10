@@ -1,2 +1,2 @@
 # toy-project
-toy-project 저장소
+seungygu's web development toy project
