@@ -1,0 +1,23 @@
+{
+  "name": "book-smoothie-react-tdd",
+  "version": "1.0.0",
+  "description": "\"스무디 한 잔 마시며 끝내는 리액트 + TDD\" 책 연습 저장소",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KIMSEUNGGYU/book-smoothie-react-tdd.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/KIMSEUNGGYU/book-smoothie-react-tdd/issues"
+  },
+  "homepage": "https://github.com/KIMSEUNGGYU/book-smoothie-react-tdd#readme",
+  "devDependencies": {
+    "jest": "^27.1.0"
+  }
+}
