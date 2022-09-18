@@ -5,3 +5,4 @@ seungygu's web development toy project
 - `00`: self 
 - `01`: lecture (강의)
 - `02`: book (책)
+- `03`: 기간있는 교육 (코드스쿼드 등)
