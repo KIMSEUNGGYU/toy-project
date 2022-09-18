@@ -1,0 +1,43 @@
+{
+  "labels": [
+    {
+      "id": 1,
+      "name": "bug",
+      "description": "Something isn't working",
+      "color": "#ff0000"
+    },
+    {
+      "id": 2,
+      "name": "feature",
+      "description": "New feature or request",
+      "color": "#00fbff"
+    },
+    {
+      "id": 3,
+      "name": "good first issue",
+      "description": "Good for newcomers",
+      "color": "#b20dff"
+    },
+    {
+      "id": 4,
+      "name": "help wanted",
+      "description": "Extra attention is needed",
+      "color": "#009e47"
+    },
+    {
+      "id": 5,
+      "name": "invalid",
+      "description": "this doesn't seem right",
+      "color": "#ffff00"
+    }
+  ],
+  "milestones": [
+    {
+      "id": 1,
+      "name": "스프린트2",
+      "dueDate": "",
+      "description": "Something isn't working",
+      "color": "#ff0000"
+    }
+  ]
+}
