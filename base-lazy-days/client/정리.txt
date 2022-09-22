@@ -12,3 +12,15 @@ useIsFetching
 
 [+]
 - 리액트 쿼리는 해당 탭(서비스 탭)을 클릭하면(윈도우로 다시 돌아올 때) 자체적으로 데이터를 다시 가져옴(리페치)
+
+===
+
+React Query 로 데이터를 미리 채우는 방법 (prefetchQuery)
+- 사용자에게 보여주고 싶은 데이터가 있을 때, 캐시에 아직 데이터가 없는 경우 미리 데이터를 채울 수 있음.
+- query 데이터를 캐시에 추가하느 ㄴ방법
+  - prefetchQuery (queryClient) - 캐시 O
+  - setQueryData (queryClient) - 캐시 O
+  - placeholderData (useQuery) - 캐시 X
+  - initialData (useQuery) - 캐시 O
+
+
