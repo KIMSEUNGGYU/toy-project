@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useQuery, useQueryClient } from 'react-query';
 
 import { PostDetail } from './PostDetail';
-const maxPostPage = 5;
+const maxPostPage = 10;
 
 async function fetchPosts(pageNum) {
   const response = await fetch(`https://jsonplaceholder.typicode.com/posts?_limit=10&_page=${pageNum}`);
