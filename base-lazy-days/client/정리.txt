@@ -23,4 +23,19 @@ React Query 로 데이터를 미리 채우는 방법 (prefetchQuery)
   - placeholderData (useQuery) - 캐시 X
   - initialData (useQuery) - 캐시 O
 
+===
 
+prefetchQuery (개념)
+- 사용자들이 액션하기 전에 필요한 데이터를 미리 가져오는 개념
+- 한예를 들면 
+  페이지 홈에서 treatments 탭을 높은 비율로 클릭한다면, 홈페이지 로드되면 미리 treatments 페이지의 데이터를 가져올 수 있음.
+- flow
+  1. 홈페이지 로딩 (prefetchQuery 로 treatments 데이터 요청)
+  2. 사용자가 treatments 탭 클릭
+  3. treatment 화면 전환
+    이때, 1에서 prefetch 한 결과가
+    1. 캐시 시간이 초과되지 않았다면 treatments 데이터가 캐시에 로드됨.
+       뿐만 아니라, uesQuery 에서 새로운 데이터 가져옴.
+       => 컴포넌트를 마운트하여 리페칭을 트리거했기 때문에 데이터가 만료되었다는 것을 알음.?
+       => 리페칭 동안에 캐시 된 데이터를 사용자에게 보여줌.
+    2. 캐시 시간이 지났다면 가비지 컬렉터에 의해 수집되고, useQuery 는 그동안 표시할 데이터 없이 데이터를 가져와야함.
