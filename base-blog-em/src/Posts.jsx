@@ -1,8 +1,8 @@
-import { useState } from 'react';
-import { useQuery } from 'react-query';
+import { useEffect, useState } from 'react';
+import { useQuery, useQueryClient } from 'react-query';
 
 import { PostDetail } from './PostDetail';
-const maxPostPage = 10;
+const maxPostPage = 5;
 
 async function fetchPosts(pageNum) {
   const response = await fetch(`https://jsonplaceholder.typicode.com/posts?_limit=10&_page=${pageNum}`);
@@ -13,11 +13,20 @@ export function Posts() {
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedPost, setSelectedPost] = useState(null);
 
+  const queryClient = useQueryClient();
+
+  useEffect(() => {
+    if (currentPage < maxPostPage) {
+      const nextPage = currentPage + 1;
+      queryClient.prefetchQuery(['posts', nextPage], () => fetchPosts(nextPage));
+    }
+  }, [currentPage, queryClient]);
+
   // replace with useQuery
   const { data, isError, error, isLoading } = useQuery(
     ['posts', currentPage], //
     () => fetchPosts(currentPage),
-    { staleTime: 3 * 1000 },
+    { staleTime: 2 * 1000, keepPreviousData: true }, // keep 속성 정확히 뭔지 모르겠음
   );
   if (isLoading) return <h3>Loading...</h3>;
   if (isError)
