@@ -45,3 +45,9 @@ useQuery 에 keepPreviousData 옵션
 - keepPreviousData 가 true 인 경우, 쿼리 키가 변경될 때까지 이전의 모든 데이터가 그대로 유지됨.
 - 자리 표시자로 사용함?
 
+===
+5장 정리
+- 초기 데이터 채우고 옵션을 다룸 (프리페치, setQueryData(QueryClient), placeholderData(useQuery), initialData(useQuery))
+- 프리페치 자세히 다룸
+  => 캐시를 데이터로 채우는 방법
+- 
