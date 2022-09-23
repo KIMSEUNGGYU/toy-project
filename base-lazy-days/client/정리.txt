@@ -100,3 +100,8 @@ refetchOnInterval
 - 리패칭 옵션을 살펴보고 제한도 함.
 - 리페칭 옵션을 전역 옵션에 추가하고 오버라이드 함.
 - 서버 변경에서 변경이 발생할 경우 특정 간격으로 데이터를 다시 불러오는 폴링 작업을 함.
+
+===
+- setQueryData (queryClient) : 캐시에 데이터를 설정하기 위함.
+- removeQueries (queryClient) : 캐시에서 쿼리를 삭제하기 위함.
+
