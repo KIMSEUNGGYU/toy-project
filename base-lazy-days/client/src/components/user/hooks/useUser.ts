@@ -1,5 +1,5 @@
 import { AxiosResponse } from 'axios';
-import { useQuery } from 'react-query';
+import { useQuery, useQueryClient } from 'react-query';
 
 import type { User } from '../../../../../shared/types';
 import { axiosInstance, getJWTHeader } from '../../../axiosInstance';
@@ -28,16 +28,19 @@ interface UseUser {
 }
 
 export function useUser(): UseUser {
+  const querClient = useQueryClient();
+  // [💡 GYU] updateUser 가 없는 경우 null 이반환되고,false 가 순화되어 제대로 동작하지 않음.
+  // updateUser 에서 setQUeriesData 를 이용해 로그인이 성공하면 해당 함수를 수행하여 올바른 값을 캐시로 동작하게 함.
   const { data: user } = useQuery(queryKeys.user, () => getUser(user));
 
   // meant to be called from useAuth
   function updateUser(newUser: User): void {
-    // TODO: update the user in the query cache
+    querClient.setQueryData(queryKeys.user, newUser);
   }
 
   // meant to be called from useAuth
   function clearUser() {
-    // TODO: reset user to null in query cache
+    querClient.setQueryData(queryKeys.user, null);
   }
 
   return { user, updateUser, clearUser };
