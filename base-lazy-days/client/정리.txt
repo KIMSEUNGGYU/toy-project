@@ -88,3 +88,7 @@ select 옵션 (useQuery)
 
 **staleTime 을 cahceTime 보다 작게주면 캐시를 사용하지 않게 되어 불필요한 방식
 
+===
+
+refetchOnInterval 
+- refetchOnInterval 은 폴링을 위한 속성
