@@ -51,3 +51,20 @@ useQuery 에 keepPreviousData 옵션
 - 프리페치 자세히 다룸
   => 캐시를 데이터로 채우는 방법
 - 
+
+===
+select 옵션 (useQuery)
+- select 옵션을 사용해 data 를 변환하는 방법
+- qeury 함수가 반환하는 data 를 변환 가능
+- 왜 사용? (리액트 쿼리의 최적화 방식)
+  - 리액트 쿼리는 불필요한 연산을 줄이기 위해 memoization 사용
+  - select 함수를 사용해 삼중 등호로 비교해서 데이터와 함수가 변경될 경우에만 수행
+    => 동일한 데이터이고 셀렉트 함수에도 변동이 없으면 셀렉트 함수를 재실행하지 않음.
+- 
+
+
+===
+필터링(filtering) 과 리페치(re-fetch)
+- filtering 과 refetch 를 통해 기본 옵션 및 변경 방법, 왜 사용하는지
+
+
