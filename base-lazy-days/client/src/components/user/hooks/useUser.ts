@@ -50,7 +50,7 @@ export function useUser(): UseUser {
   // meant to be called from useAuth
   function clearUser() {
     querClient.setQueryData(queryKeys.user, null);
-    querClient.removeQueries('user-appointments'); // 'user-appointments' 키와 관련된 쿼리 모두 제거
+    querClient.removeQueries([queryKeys.appointments, queryKeys.user]); // 'user-appointments' 키와 관련된 쿼리 모두 제거
     // 사용자가 로그아웃하면 사용자 예약 쿼리도 수행안함.
   }
 
