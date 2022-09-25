@@ -15,21 +15,23 @@ function queryErrorHandler(error: unknown): void {
   toast({ title, status: 'error', variant: 'subtle', isClosable: true });
 }
 
-// to satisfy typescript until this file has uncommented contents
+export function generateQueryClient(): QueryClient {
+  return new QueryClient({
+    defaultOptions: {
+      queries: {
+        onError: queryErrorHandler,
+        staleTime: 1000 * 60 * 10, // 10m
+        cacheTime: 1000 * 60 * 15, // 15m
+        refetchOnMount: false,
+        refetchOnReconnect: false,
+        refetchOnWindowFocus: false,
+      },
+      mutations: {
+        // mutation 오류 처리 기본
+        onError: queryErrorHandler,
+      },
+    },
+  });
+}
 
-export const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      onError: queryErrorHandler,
-      staleTime: 1000 * 60 * 10, // 10m
-      cacheTime: 1000 * 60 * 15, // 15m
-      refetchOnMount: false,
-      refetchOnReconnect: false,
-      refetchOnWindowFocus: false,
-    },
-    mutations: {
-      // mutation 오류 처리 기본
-      onError: queryErrorHandler,
-    },
-  },
-});
+export const queryClient = generateQueryClient();
