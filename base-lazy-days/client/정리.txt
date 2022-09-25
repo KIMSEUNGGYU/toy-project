@@ -155,3 +155,6 @@ useMutation
 - mutate 함수를 반환해서 이를 변이에 활용함.
 - onMute 콜백이 있어, 낙관적쿼리에 사용함.
   => 변이가 실패할 때 복원할 수 있도록 이전 상태를 저장하는데 사용함.
+===
+queryClient.invalidateQueries
+- 쿼리를 무효화하는 함수
