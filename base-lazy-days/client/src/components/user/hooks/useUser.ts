@@ -44,6 +44,12 @@ export function useUser(): UseUser {
 
   // meant to be called from useAuth
   function updateUser(newUser: User): void {
+    // set user in state
+    // setUser(newUser);
+
+    // update user in localstorage
+    setStoredUser(newUser);
+
     querClient.setQueryData(queryKeys.user, newUser);
   }
 
