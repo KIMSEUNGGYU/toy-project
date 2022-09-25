@@ -116,3 +116,8 @@ onSuccess (useQuery)
 initialData
 - 초기 데이터를 캐시에 추가하고 싶을 때 사용
 
+===
+의존적 쿼리 (Dependent Queries)
+- useUserAppointments 에서 로그인 되어있지 않으면, 즉 user 값이 정의되지 않은 경우 쿼리가 실행되지 않도록
+  `enabled: !!user` 와 같이 enabled 속성을 제어해서 의존적으로 쿼리를 수행할지 말지를 정함.
+
