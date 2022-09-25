@@ -111,3 +111,8 @@ onSuccess (useQuery)
 - setQueryData 에서 실행될 때 전달된 데이터를 가져오고, 쿼리 함수에서는 반환된 데이터를 가져옴.
 - onSuccess: (received )=>{} 와 같이 전달받은 데이터를 received 로 가정하면 
   쿼리 함수나, 전달된 데이터에서는 특정 값이, clearUser 에서는 null 이 전다 됨.
+
+===
+initialData
+- 초기 데이터를 캐시에 추가하고 싶을 때 사용
+

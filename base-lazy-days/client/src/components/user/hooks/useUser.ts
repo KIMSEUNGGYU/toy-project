@@ -32,6 +32,7 @@ export function useUser(): UseUser {
   // [💡 GYU] updateUser 가 없는 경우 null 이반환되고,false 가 순화되어 제대로 동작하지 않음.
   // updateUser 에서 setQUeriesData 를 이용해 로그인이 성공하면 해당 함수를 수행하여 올바른 값을 캐시로 동작하게 함.
   const { data: user } = useQuery(queryKeys.user, () => getUser(user), {
+    initialData: getStoredUser,
     onSuccess: (received: User | null) => {
       if (!received) {
         clearStoredUser();
