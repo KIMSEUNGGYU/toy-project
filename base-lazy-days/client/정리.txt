@@ -121,3 +121,11 @@ initialData
 - useUserAppointments 에서 로그인 되어있지 않으면, 즉 user 값이 정의되지 않은 경우 쿼리가 실행되지 않도록
   `enabled: !!user` 와 같이 enabled 속성을 제어해서 의존적으로 쿼리를 수행할지 말지를 정함.
 
+===
+로그아웃 기능을 구현할 때 removeQuries 메서드를 통해 특정 쿼리에 대한 데이터를 제거하는 이유
+왜 user 데이터에 removeQuries 를 사용하지 않고 setQueryData에 null 를 하는지 ?? 
+- 사용자 데이터를 변경해서 onSuccess 콜백을 발생시킬때 onSuccess 콜백이 로컬 스토리지에 데이터를 유지하며 setQueryData 가 onSuccess 를 발생시키기 때문
+  => onSuccess 는 setQueryData 다음에 실행되고 removeQueries 다음에는 실행되지 않음.
+  따라서 user 데이터에 removeQueries 가 아닌 setQuerData 를 사용하는게 중요!
+=> onSuccess 가 setQueryData 가 수행된 다음에는 동작하는데 removeQueries 다음에는 수행되지 않아,
+   `clearUser` 에 같이 setQuerData 와 removeQueries 도 같이 수행하게 해야함!! 
