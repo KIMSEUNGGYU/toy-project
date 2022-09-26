@@ -195,3 +195,7 @@ queryClient.invalidateQueries
   - 롤백의 경우를 대비하여 기존의 값을 저장함.
     그래서 롤백을 대비하기 위해 onError 콜백에 인자로 전달.
 
+===
+@testing-library/react-hooks 에서 renderHook 반환 값
+- result 는 훅의 결과를 포함하는 객체,
+- waitFor 은 비동기 액션을 기다릴 수 있게 함.
