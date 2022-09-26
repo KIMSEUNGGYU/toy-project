@@ -1,0 +1,201 @@
+데이터 유형에 커스텀 훅을 쓰는 이유
+- 다수의 부분에서 useQuery 를 호출해야하는 경우 재작성할 필요가 없음
+- 다수의 useQuery 를 작성할 때 key가 헷가릴 수 있음.
+- 사용하길 원하는 쿼리 함수를 혼동하는 위험도 없음.
+- 따로 빼서 구현하기 때문에 추상화 개념도 적용되어 있음.
+
+===
+
+useIsFetching
+- useIsFetching 의 반환값은 숫자로 isFetching 중인 수를 반환?
+- 현재 가져오는 쿼리가 있는지 나타내는 방법
+
+[+]
+- 리액트 쿼리는 해당 탭(서비스 탭)을 클릭하면(윈도우로 다시 돌아올 때) 자체적으로 데이터를 다시 가져옴(리페치)
+
+===
+
+React Query 로 데이터를 미리 채우는 방법 (prefetchQuery)
+- 사용자에게 보여주고 싶은 데이터가 있을 때, 캐시에 아직 데이터가 없는 경우 미리 데이터를 채울 수 있음.
+- query 데이터를 캐시에 추가하느 ㄴ방법
+  - prefetchQuery (queryClient) - 캐시 O
+  - setQueryData (queryClient) - 캐시 O
+  - placeholderData (useQuery) - 캐시 X
+  - initialData (useQuery) - 캐시 O
+
+===
+
+prefetchQuery (개념)
+- 사용자들이 액션하기 전에 필요한 데이터를 미리 가져오는 개념
+- 한예를 들면 
+  페이지 홈에서 treatments 탭을 높은 비율로 클릭한다면, 홈페이지 로드되면 미리 treatments 페이지의 데이터를 가져올 수 있음.
+- flow
+  1. 홈페이지 로딩 (prefetchQuery 로 treatments 데이터 요청)
+  2. 사용자가 treatments 탭 클릭
+  3. treatment 화면 전환
+    이때, 1에서 prefetch 한 결과가
+    1. 캐시 시간이 초과되지 않았다면 treatments 데이터가 캐시에 로드됨.
+       뿐만 아니라, uesQuery 에서 새로운 데이터 가져옴.
+       => 컴포넌트를 마운트하여 리페칭을 트리거했기 때문에 데이터가 만료되었다는 것을 알음.?
+       => 리페칭 동안에 캐시 된 데이터를 사용자에게 보여줌.
+    2. 캐시 시간이 지났다면 가비지 컬렉터에 의해 수집되고, useQuery 는 그동안 표시할 데이터 없이 데이터를 가져와야함.
+
+===
+useQuery 에 keepPreviousData 옵션
+- keepPreviousData 가 true 인 경우, 쿼리 키가 변경될 때까지 이전의 모든 데이터가 그대로 유지됨.
+- 자리 표시자로 사용함?
+
+===
+5장 정리
+- 초기 데이터 채우고 옵션을 다룸 (프리페치, setQueryData(QueryClient), placeholderData(useQuery), initialData(useQuery))
+- 프리페치 자세히 다룸
+  => 캐시를 데이터로 채우는 방법
+- 
+
+===
+select 옵션 (useQuery)
+- select 옵션을 사용해 data 를 변환하는 방법
+- qeury 함수가 반환하는 data 를 변환 가능
+- 왜 사용? (리액트 쿼리의 최적화 방식)
+  - 리액트 쿼리는 불필요한 연산을 줄이기 위해 memoization 사용
+  - select 함수를 사용해 삼중 등호로 비교해서 데이터와 함수가 변경될 경우에만 수행
+    => 동일한 데이터이고 셀렉트 함수에도 변동이 없으면 셀렉트 함수를 재실행하지 않음.
+- 
+
+===
+필터링(filtering) 과 리페치(re-fetch)
+- filtering 과 refetch 를 통해 기본 옵션 및 변경 방법, 왜 사용하는지
+
+===
+리페칭
+- 서버가 만료 데이터를 업데이트 하는 것
+  => 일정 시간이 지나면 서버가 만료된 데이터를 삭제하는데, 리페칭은 페이지를 벗어났다가 다시 돌아왔을 때 볼 수 있음.
+  => stale 시간이 만료되어 다른 화면을 갔다가 해당 페이지를 볼 때 리페칭 작업이 일어남
+- stale 쿼리의 자동으로 업데이트 되는 사항
+  - 쿼리 키가 처음 호출
+  - 쿼리를 호출하는 반응 컴포넌트 증가
+  - 창을 재포커싱
+  - 만료된 데이터의 업데이트 여부를 확인할 수 있는 네트워크가 다시 연결된 경우
+래페칭 하는 방법
+- 옵션으로 제어 할 수 있음
+- refetchOnMount(boolean), refetchOnWindowFocus(boolean), refetchOnReconnect(boolean), refetchOnInterval(ms)
+리페칭 제한 하는 방법
+- stale 시간 증가
+  => 창을 재포커스 하거나 네트워크에 재연결하는 트리거는 데이터가 실제로 만료된 경우에만 작용함.
+- 3가지 boolean 옵션 중 하나 혹은 전체를 끄면 됨.
+- 변동이 잦은 않은 데이터에 적용해야함.
+- 미세한 변동에도 큰 변화를 불러오는 데이터에는 적용하지 말아야함.
+
+**staleTime 을 cahceTime 보다 작게주면 캐시를 사용하지 않게 되어 불필요한 방식
+
+===
+
+refetchOnInterval 
+- refetchOnInterval 은 폴링을 위한 속성
+
+====
+섹션 6 정리
+- 필터링을 위한 select 옵션
+  - 안정(stable) 함수가 되기 위해 상줌 등호를 적용
+- 리패칭 옵션을 살펴보고 제한도 함.
+- 리페칭 옵션을 전역 옵션에 추가하고 오버라이드 함.
+- 서버 변경에서 변경이 발생할 경우 특정 간격으로 데이터를 다시 불러오는 폴링 작업을 함.
+
+===
+- setQueryData (queryClient) : 캐시에 데이터를 설정하기 위함.
+- removeQueries (queryClient) : 캐시에서 쿼리를 삭제하기 위함.
+
+===
+onSuccess (useQuery)
+- onSuccess 콜백 속성은 queryClient.setQueryData 실행 이후나 query 함수가 봔환된 후에 실행됨.
+- setQueryData 에서 실행될 때 전달된 데이터를 가져오고, 쿼리 함수에서는 반환된 데이터를 가져옴.
+- onSuccess: (received )=>{} 와 같이 전달받은 데이터를 received 로 가정하면 
+  쿼리 함수나, 전달된 데이터에서는 특정 값이, clearUser 에서는 null 이 전다 됨.
+
+===
+initialData
+- 초기 데이터를 캐시에 추가하고 싶을 때 사용
+
+===
+의존적 쿼리 (Dependent Queries)
+- useUserAppointments 에서 로그인 되어있지 않으면, 즉 user 값이 정의되지 않은 경우 쿼리가 실행되지 않도록
+  `enabled: !!user` 와 같이 enabled 속성을 제어해서 의존적으로 쿼리를 수행할지 말지를 정함.
+
+===
+로그아웃 기능을 구현할 때 removeQuries 메서드를 통해 특정 쿼리에 대한 데이터를 제거하는 이유
+왜 user 데이터에 removeQuries 를 사용하지 않고 setQueryData에 null 를 하는지 ?? 
+- 사용자 데이터를 변경해서 onSuccess 콜백을 발생시킬때 onSuccess 콜백이 로컬 스토리지에 데이터를 유지하며 setQueryData 가 onSuccess 를 발생시키기 때문
+  => onSuccess 는 setQueryData 다음에 실행되고 removeQueries 다음에는 실행되지 않음.
+  따라서 user 데이터에 removeQueries 가 아닌 setQuerData 를 사용하는게 중요!
+=> onSuccess 가 setQueryData 가 수행된 다음에는 동작하는데 removeQueries 다음에는 수행되지 않아,
+   `clearUser` 에 같이 setQuerData 와 removeQueries 도 같이 수행하게 해야함!! 
+
+=== 
+섹션 7 정리
+- React Query 와 인증 사이의 상호 작용을 학습
+- useUser 훅이 userQuery 를 호출하고 사용자가 데이터를 제공하기 위해 query 캐시를 사용함.
+  useQuery 는 평소대로 서버로부터 데이터를 새로 고침!
+// .... (추가 정리?)
+
+===
+mutation
+- 서버에 데이터를 변경하는 방법
+- 쿼리 무효화
+  데이터가 캐시에서 제거되고 리페치를 트리거할 수 있음.
+  변이를 보내고 서버에서 새 데이터를 다시 받을 때 캐시를 업데이트함.
+- 낙관적 업데이트  
+  변이가 성공하기를 희망하지만 실패하더라도 롤백할 수 있다는 의미
+- 변이에 대한 전역 페칭, 인디케이터 및 오류 처리 설정 방법
+
+===
+useMutation
+- useMutation 은 일회성이기 때문에 캐시 데이터가 없음
+- 기본적으로 재시도 없음 (설정 가능)
+- 캐시 개념이 없기 때문에 isLoading 개념이 없고, isFetching 만 존재
+- mutate 함수를 반환해서 이를 변이에 활용함.
+- onMute 콜백이 있어, 낙관적쿼리에 사용함.
+  => 변이가 실패할 때 복원할 수 있도록 이전 상태를 저장하는데 사용함.
+
+===
+queryClient.invalidateQueries
+- 쿼리를 무효화하는 함수
+
+=== 
+쿼리 키 접두사 (prefix)
+- 예약 관련된 기능은 여러 군데에서 사용되어 쿼리 키들이 서로 다름
+  그래서 mutate 로 데이터를 변이할 때 다른 예약 쿼리가 동기화되지 않은 경우 발생
+  => 이럴 경우 접두사를 통해 예약 관련 쿼리를 무효화 할 수 있음.
+- invalidateQueries 정확한 키가 아닌 접두사를 사용함.
+  => 동일한 쿼리 키 접두사로 서로 관련된 쿼리를 설정하면 모든 쿼리를 한 번에 무효화할 수 있음.
+- 정확한 키로 설정하고 싶다면 exact: true 로 설정
+- 다른 queryClient 의 메서드 removeQueires 등도 쿼리키 접두사 사용
+
+===
+낙관적 업데이트 (Optimistic Update)
+- 서버로부터 응답을 받기 전에 사용자 캐시를 업데이트하는 것!
+- 장점은 
+  캐시가 더 빨리 업데이트 되어, 캐시를 업데이트하기 위해 서버 응답을 기다릴 필요 없음.
+  복수의 컴포넌트가 이 데이터를 사용하는 경우 앱은 사용자에게 훨씬 더 민감 하게 반응함.
+- 단점은 
+  서버 업데이트가 실패할 경우 코드가 더 복잡해짐 ()
+  업데이트 이전의 데이터로 돌려야하기 때문에 이전의 데이터를 저장해둬야함.
+- useMutation 에는 onMutate 콜백이 있는데, 이것이 콘텍스트 값을 반환하고 onError 핸들러가 이 콘텍스트 값을 인수로 받음
+  - 에러가 생기면 onError 핸들러가 호출되고, onError 핸들러가 콘텍스트 값을 받아서 캐시 값을 이전으로 복원할 수 있게 함.
+  - 콘텍스트는  낙관적 업데이트를 적용하기 전의 콘텍스트를 의미함.
+  - onMute 함수는 진행 중인 모든 리페치를 취소함.
+    쿼리를 취소하지 않은 경우 쿼리를 다시 가져올 수 있음.
+  
+===
+섹션 8 정리
+- 변이를 완료한 뒤 서버와 동기화한 상태로 데이터를 유지하는 법에 대해 많은 내용을 알아봄.
+- 쿼리를 무효화하면 캐시를 지우고 리페치를 시작함.
+- 쿼리 클라이언트인 setQueryData 를 사용하여 변이 함수로부터 반환된 데이터로 캐시를 업데이트 가능
+- 낙관적 업데이트
+  - 변이를 전송하고 발신 쿼리를 모두 취소하여 낙관적 업데이트를 덮여쓰는 서버 측의 옛 데이터를 받지 않는 것!
+  - 롤백의 경우를 대비하여 기존의 값을 저장함.
+    그래서 롤백을 대비하기 위해 onError 콜백에 인자로 전달.
+
+===
+@testing-library/react-hooks 에서 renderHook 반환 값
+- result 는 훅의 결과를 포함하는 객체,
+- waitFor 은 비동기 액션을 기다릴 수 있게 함.
