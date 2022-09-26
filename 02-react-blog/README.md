@@ -1,2 +1,2 @@
-# toy-project
-seungygu's web development toy project
+# blog
+리액트를 다루는 기술 (책) - 블로그 개발 프로젝트
